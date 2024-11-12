@@ -1,0 +1,39 @@
+services:
+  api:
+    container_name: node_container
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app              
+      - /app/node_modules    
+    ports:
+      - "3000:3000"          
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - db                   
+    networks:
+      - docker-network
+
+  db:
+    container_name: banco_postgres
+    image: postgres:13-alpine
+    environment:
+      POSTGRES_USER: usuarioteste
+      POSTGRES_PASSWORD: senhateste
+      POSTGRES_DB: bancoteste
+    volumes:
+      - pg_data:/var/lib/postgresql/data  
+    ports:
+      - "5433:5433"          
+    networks:
+      - docker-network
+
+
+networks:
+  docker-network:
+    driver: bridge
+
+volumes:
+  pg_data:
